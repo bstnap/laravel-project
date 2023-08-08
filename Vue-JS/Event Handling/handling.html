@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <title>Event Handling</title>
+    </head>
+
+    <body>
+        <div id="example-1">
+            <button v-on:click="counter += 1">Add +</button>
+            <p>The button above has been clicked {{ counter }} times.</p>
+        </div>
+
+        <div id="example-2">
+            <!-- `greet` is the name of a method defined below -->
+            <button v-on:click="greet">Greet</button>
+        </div>
+
+        <div id="example-3">
+            <button v-on:click="say('Hi')">Say, Hi!</button>
+            <button v-on:click="say('Hello')">Say, Hello!</button>
+        </div>
+    </body>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script type="text/javascript">
+    var example1 = new Vue({
+        el: '#example-1',
+        data: {
+            counter: 0
+        }
+    })
+
+    var example2 = new Vue({
+        el: '#example-2',
+        data: {
+            name: 'Bastian Aji Prihantoro'
+        },
+        // define methods under the `methods` object
+        methods: {
+            greet: function (event) {
+            // `this` inside methods points to the Vue instance
+            alert('Hello, ' + this.name + '!')
+            // `event` is the native DOM event
+            if (event) {
+                alert(event.target.tagName)
+            }
+            }
+        }
+    })
+
+    new Vue({
+        el: '#example-3',
+        methods: {
+            say: function (message) {
+            alert(message)
+            }
+         }
+    })
+</script>
