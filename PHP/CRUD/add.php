@@ -1,57 +1,40 @@
-<html>
-
-<head>
-    <title>Edit Buku</title>
-</head>
-
 <?php
 include_once("db_connect.php");
-$isbn = $_GET['isbn'];
 
-$buku = mysqli_query($conn, "SELECT * FROM buku WHERE isbn='$isbn'");
 $penerbit = mysqli_query($conn, "SELECT * FROM penerbit");
 $pengarang = mysqli_query($conn, "SELECT * FROM pengarang");
 $katalog = mysqli_query($conn, "SELECT * FROM katalog");
-
-while ($bukuData = mysqli_fetch_array($buku)) {
-    $judul = $bukuData['judul'];
-    $isbn = $bukuData['isbn'];
-    $tahun = $bukuData['tahun'];
-    $id_penerbit = $bukuData['id_penerbit'];
-    $id_pengarang = $bukuData['id_pengarang'];
-    $id_katalog = $bukuData['id_katalog'];
-    $qty_stok = $bukuData['qty_stok'];
-    $harga_pinjam = $bukuData['harga_pinjam'];
-}
 ?>
 
-<body>
-    <a href="index.php">Go to Home</a>
-    <br /><br />
+<html>
 
-    <form action="edit.php?isbn=<?php echo $isbn; ?>" method="post">
-        <table width="25%" border="0">
+<head>
+    <title>Tambah Buku</title>
+</head>
+
+<body>
+    <a href="index.php">Kembali</a>
+    <form action="add.php" method="post" name="form1">
+        <table width=25% border="0">
             <tr>
                 <td>ISBN</td>
-                <td style="font-size: 11pt;"><?php echo $isbn; ?> </td>
+                <td><input type="text" name="isbn"></td>
             </tr>
             <tr>
                 <td>Judul</td>
-                <td><input type="text" name="judul" value="<?php echo $judul; ?>"></td>
+                <td><input type="text" name="judul"></td>
             </tr>
             <tr>
                 <td>Tahun</td>
-                <td><input type="text" name="tahun" value="<?php echo $tahun; ?>"></td>
+                <td><input type="text" name="tahun"></td>
             </tr>
             <tr>
                 <td>Penerbit</td>
                 <td>
                     <select name="id_penerbit">
-                        <?php
-                        while ($penerbitData = mysqli_fetch_array($penerbit)) {
-                            echo "<option " . ($penerbitData['id_penerbit'] == $id_penerbit ? 'selected' : '') . " value='" . $penerbitData['id_penerbit'] . "'>" . $penerbitData['nama_penerbit'] . "</option>";
-                        }
-                        ?>
+                        <?php while ($penerbitData = mysqli_fetch_array($penerbit)) : ?>
+                            <option value="<?= $penerbitData['id_penerbit']; ?>"><?= $penerbitData['nama_penerbit']; ?></option>
+                        <?php endwhile; ?>
                     </select>
                 </td>
             </tr>
@@ -59,11 +42,9 @@ while ($bukuData = mysqli_fetch_array($buku)) {
                 <td>Pengarang</td>
                 <td>
                     <select name="id_pengarang">
-                        <?php
-                        while ($pengarang_data = mysqli_fetch_array($pengarang)) {
-                            echo "<option " . ($pengarang_data['id_pengarang'] == $id_pengarang ? 'selected' : '') . " value='" . $pengarang_data['id_pengarang'] . "'>" . $pengarang_data['nama_pengarang'] . "</option>";
-                        }
-                        ?>
+                        <?php while ($pengarangData = mysqli_fetch_array($pengarang)) : ?>
+                            <option value="<?= $pengarangData['id_pengarang']; ?>"><?= $pengarangData['nama_pengarang']; ?></option>
+                        <?php endwhile; ?>
                     </select>
                 </td>
             </tr>
@@ -71,35 +52,30 @@ while ($bukuData = mysqli_fetch_array($buku)) {
                 <td>Katalog</td>
                 <td>
                     <select name="id_katalog">
-                        <?php
-                        while ($katalog_data = mysqli_fetch_array($katalog)) {
-                            echo "<option " . ($katalog_data['id_katalog'] == $id_katalog ? 'selected' : '') . " value='" . $katalog_data['id_katalog'] . "'>" . $katalog_data['nama'] . "</option>";
-                        }
-                        ?>
+                        <?php while ($katalogData = mysqli_fetch_array($katalog)) : ?>
+                            <option value="<?= $katalogData['id_katalog']; ?>"><?= $katalogData['nama']; ?></option>
+                        <?php endwhile; ?>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td>Qty Stok</td>
-                <td><input type="text" name="qty_stok" value="<?php echo $qty_stok; ?>"></td>
+                <td><input type="text" name="qty_stok"></td>
             </tr>
             <tr>
                 <td>Harga Pinjam</td>
-                <td><input type="text" name="harga_pinjam" value="<?php echo $harga_pinjam; ?>"></td>
+                <td><input type="text" name="harga_pinjam"></td>
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" name="update" value="Update"></td>
+                <td><input type="submit" name="submit" value="Add"></td>
             </tr>
         </table>
     </form>
 
     <?php
-
-    // Check If form submitted, insert form data into users table.
-    if (isset($_POST['update'])) {
-
-        $isbn = $_GET['isbn'];
+    if (isset($_POST['submit'])) {
+        $isbn = $_POST['isbn'];
         $judul = $_POST['judul'];
         $tahun = $_POST['tahun'];
         $id_penerbit = $_POST['id_penerbit'];
@@ -110,7 +86,7 @@ while ($bukuData = mysqli_fetch_array($buku)) {
 
         include_once("db_connect.php");
 
-        $result = mysqli_query($conn, "UPDATE buku SET judul = '$judul', tahun = '$tahun', id_penerbit = '$id_penerbit', id_pengarang = '$id_pengarang', id_katalog = '$id_katalog', qty_stok = '$qty_stok', harga_pinjam = '$harga_pinjam' WHERE isbn = '$isbn';");
+        $result = mysqli_query($conn, "INSERT INTO `buku` (`isbn`, `judul`, `tahun`, `id_penerbit`, `id_pengarang`, `id_katalog`, `qty_stok`, `harga_pinjam`) VALUES ('$isbn', '$judul', '$tahun', '$id_penerbit', '$id_pengarang', '$id_katalog', '$qty_stok', '$harga_pinjam');");
 
         header("Location:index.php");
     }
